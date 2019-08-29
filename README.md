@@ -1,2 +1,2 @@
 # Genetic-Algorithm
-A Genetic Algorithm that solves the problem discribed here: https://github.com/SPauly/Genetic-Algorithm.git
+A Genetic Algorithm that solves the problem discribed here: http://www.ai-junkie.com/ga/intro/gat3.html
