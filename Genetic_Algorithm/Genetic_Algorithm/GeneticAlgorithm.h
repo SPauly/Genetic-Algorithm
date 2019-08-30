@@ -25,7 +25,6 @@ class GeneticAlgorithm      //Class to hold the genetic Algorithm
 	float ftotal_fitness = .0f; //the total fitness of the chromosomes to 
 
 	int generation_count = 0; //how many generations have we made
-	int solutions_pos = 0; //The index where we found our solution
 
 	bool bFoundSolution = false; //have we found a solution yet
 
@@ -39,12 +38,18 @@ class GeneticAlgorithm      //Class to hold the genetic Algorithm
 
 	std::vector<s_chromo_type> v_population{ POP_SIZE }; //this is our population 
 
+	s_chromo_type* s_solution_ptr = nullptr;
+
 	void __init__rand(); //initialize rand() with the time
 	void __init__pop(); //initialize a new random population
-
+	void PrintChromo(const s_chromo_type*); //Print the chromosomes solution and fitness
+	void PrintSymbol(int); //function used by PrintChromo to print the operators
 	std::string getRandomBits(int); //create a random chromosome
 
-	float& AssigneFitness(float&, float&);
+	bool AssigneFitness(); //Assignes a fitness value to each chromosome in the population
+
+	int ParseGen(const std::string&, int*); //decode/parse each gen in a chromosome
+	int BinToDec(const std::string&); //convert a 4bit bit to decemal
 
 public:
 
@@ -54,6 +59,6 @@ public:
 	~GeneticAlgorithm();
 
 	float operator=(float&); //use '=' to set new target
-	void solve(GeneticAlgorithm*); //member function to find a way to solve our problem
+	void solve(); //member function to find a way to solve our problem
 };
 
