@@ -38,13 +38,17 @@ class GeneticAlgorithm      //Class to hold the genetic Algorithm
 
 	std::vector<s_chromo_type> v_population{ POP_SIZE }; //this is our population 
 
-	s_chromo_type* s_solution_ptr = nullptr;
+	s_chromo_type* s_solution_ptr;
 
 	void __init__rand(); //initialize rand() with the time
 	void __init__pop(); //initialize a new random population
 	void PrintChromo(const s_chromo_type*); //Print the chromosomes solution and fitness
 	void PrintSymbol(int); //function used by PrintChromo to print the operators
-	std::string getRandomBits(int); //create a random chromosome
+	void Crossover(std::string&, std::string&); //Crossover these two chromosomes (per reference)
+	void Mutate(std::string&); //Mutate our new chromosomes
+
+	const std::string& getRandomBits(int) const; //create a random chromosome
+	const std::string& Roulette(s_chromo_type*) const; //choose one chromosome after Roulette wheel selection
 
 	bool AssigneFitness(); //Assignes a fitness value to each chromosome in the population
 
@@ -58,7 +62,7 @@ public:
 
 	~GeneticAlgorithm();
 
-	float operator=(float&); //use '=' to set new target
+	float operator=(float); //use '=' to set new target
 	void solve(); //member function to find a way to solve our problem
 };
 

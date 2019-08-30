@@ -5,6 +5,7 @@ int main() {
 	GeneticAlgorithm GA{ ftarget };
 	cout << "Enter a target number: ";
 	std::cin >> ftarget;
+	GA = ftarget;
 	GA.solve();
 	std::cin.get();
 }
