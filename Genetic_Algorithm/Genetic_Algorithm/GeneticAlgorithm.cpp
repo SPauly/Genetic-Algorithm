@@ -20,16 +20,16 @@ float GeneticAlgorithm::operator=(float fnew_target) {
 }
 
 void GeneticAlgorithm::solve() {
-	cout << fTarget << endl;
 	__init__pop(); //initialize the population
 
 	generation_count = 0; //set generation counter back to 0;
 
 	while(!bFoundSolution){ //run through the algorithm untill we found a solution or we hit MAX_ALLOWED_GENERATIONS
 		ftotal_fitness = 0; //set the total fitness of the current generation back to 0
-		if (AssigneFitness()) { //found a solution already?
-			cout << "Found Solution: " << endl;
-			PrintChromo(this->s_solution_ptr);
+		
+		if (AssigneFitness() == true) { //have we already found a solution?
+			PrintChromo(s_solution_ptr);
+			break;
 		}
 
 		int counter = 0; //counter for going through the population
@@ -75,12 +75,12 @@ void GeneticAlgorithm::__init__pop() {
 	__init__rand();
 	for (int i = 0; i < POP_SIZE; i++) {
 		v_population.at(i).bits = getRandomBits(CHROMO_LENGTH); //Create a random Chromosome
-		v_population.at(i).fFitness = .0f;
+		v_population.at(i).fFitness = 0.0f;
 	}
 }
 
 void GeneticAlgorithm::PrintChromo(const s_chromo_type* chromo_ptr) {
-	int buffer[(int)(CHROMO_LENGTH / GENE_LENGTH)]; //this buffer holds the decoded chromosome
+	int buffer[ (int)(CHROMO_LENGTH / GENE_LENGTH) ]; //this buffer holds the decoded chromosome
 	int num_elements = ParseGen(chromo_ptr->bits, buffer); //fill the buffer with elements and store it's size in num_elements
 	cout << "\n Gene: ";
 	for (int i = 0; i < num_elements; i++) {
@@ -136,18 +136,18 @@ void GeneticAlgorithm::Mutate(std::string& offspring) {
 	}
 }
 
-const std::string& GeneticAlgorithm::getRandomBits(int length) const { 
-	std::string temp = "";
+std::string GeneticAlgorithm::getRandomBits(int length) { 
+	std::string bits = "";
 	for (int i = 0; i < length; i++) {         //choose 1 or 0
 		if (RANDOM_NUM > 0.5f)       
-			temp += '1';
+			bits += '1';
 		else
-			temp += '0';
+			bits += '0';
 	}
-	return temp;
+	return bits;
 }
 
-const std::string& GeneticAlgorithm::Roulette(s_chromo_type* pop_ptr) const { // pop_ptr is a pointer to the first element in our population vector
+std::string& GeneticAlgorithm::Roulette(s_chromo_type* pop_ptr){ // pop_ptr is a pointer to the first element in our population vector
 	int slice = (float)(RANDOM_NUM / ftotal_fitness); //create a random slice within our total fitness
 
 	float ftns_so_far = .0f; //to messure where our "wheel" is at
@@ -161,13 +161,13 @@ const std::string& GeneticAlgorithm::Roulette(s_chromo_type* pop_ptr) const { //
 
 
 bool GeneticAlgorithm::AssigneFitness() {
-	for (int x = 0; x < POP_SIZE; x++) { //Assigne a Fitness to each Chromosome of our population
-		int buffer[ (int)(CHROMO_LENGTH / GENE_LENGTH) ]; //this buffer holds the decoded chromosome
-		int num_elements = ParseGen(v_population.at(x).bits, buffer);  //fill the buffer with elements and store it's size in num_elements
+
+	for (int i = 0; i < POP_SIZE; i++) { //Assigne a fitness to each chromosome and add it to the total fitness
+		int buffer[(int)(CHROMO_LENGTH / GENE_LENGTH)]; //this buffer holds the decoded chromosome
+		int num_elements = ParseGen(v_population.at(i).bits, buffer);  //fill the buffer with elements and store it's size in num_elements
 		float fcurrent_score = .0f; // the score of the current chromosome
-		cout << "haupt " << x << endl;
+
 		for (int i = 0; i < num_elements; i++) { //find out how good the chromosome solution is
-			cout << "		small " << i << endl;
 			switch (buffer[i])
 			{
 			case 10:  // 10 = +
@@ -182,27 +182,29 @@ bool GeneticAlgorithm::AssigneFitness() {
 			case 13: // 13 = /
 				fcurrent_score /= buffer[++i];
 				break;
+			default:
+				break;
 			}
 		}
 
 		if (fcurrent_score == this->fTarget) { //check if we already found a solution and point the ptr to it
 			this->bFoundSolution = true;
-			this->s_solution_ptr = &v_population.at(x);
-			this->ftotal_fitness += 1 / (fcurrent_score - this->fTarget);;
-			return this->bFoundSolution;
+			this->s_solution_ptr = &v_population.at(i);
+			break;
 		}
-
-		v_population.at(x).fFitness = 1 / (fcurrent_score - this->fTarget); //assigne fitness
+		v_population.at(i).fFitness = 1 / (fcurrent_score - this->fTarget); //assigne fitness
+		ftotal_fitness += v_population.at(i).fFitness;
 	}
-	return this->bFoundSolution;
+
+	return bFoundSolution;
 }
 
-int GeneticAlgorithm::ParseGen(const std::string& chromo, int* buffer_ptr) {
+int GeneticAlgorithm::ParseGen(std::string chromo, int* buffer_ptr) {
 	int buffer_index = 0; //index for buffer
 	bool bOperator = true; //determines whether we are searching for an operator
 	int current_gen = 0; //stores the current gen
 
-	for (int i = 0; i < chromo.length(); i++) { //Parse each gen
+	for (int i = 0; i < chromo.length(); i += GENE_LENGTH) { //Parse each gene !!!Remember we have to increase by GENE_LENGTH in order to catch all the 4 bit pairs
 		current_gen = BinToDec(chromo.substr(i, GENE_LENGTH));  //decode the current bit. substr(start,end) returns the part of the string from start to end
 
 		if (bOperator) { // Make sure that we follow operator number operator number...
@@ -233,7 +235,7 @@ int GeneticAlgorithm::ParseGen(const std::string& chromo, int* buffer_ptr) {
 	return buffer_index; //so that we know the buffers size
 }
 
-int GeneticAlgorithm::BinToDec(const std::string& bit ) {
+int GeneticAlgorithm::BinToDec(std::string bit ) {
 	int decemal = 0; 
 	int value_to_add = 1; //holds the value of the positions bit 
 

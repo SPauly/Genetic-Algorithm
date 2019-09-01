@@ -36,7 +36,7 @@ class GeneticAlgorithm      //Class to hold the genetic Algorithm
 		s_chromo_type(std::string bts, float ftns) : bits{ bts }, fFitness{ ftns }{};
 	};
 
-	std::vector<s_chromo_type> v_population{ POP_SIZE }; //this is our population 
+	std::vector<s_chromo_type> v_population{ (POP_SIZE) }; //this is our population 
 
 	s_chromo_type* s_solution_ptr;
 
@@ -47,13 +47,13 @@ class GeneticAlgorithm      //Class to hold the genetic Algorithm
 	void Crossover(std::string&, std::string&); //Crossover these two chromosomes (per reference)
 	void Mutate(std::string&); //Mutate our new chromosomes
 
-	const std::string& getRandomBits(int) const; //create a random chromosome
-	const std::string& Roulette(s_chromo_type*) const; //choose one chromosome after Roulette wheel selection
+	std::string getRandomBits(int); //create a random chromosome
+	std::string& Roulette(s_chromo_type*); //choose one chromosome after Roulette wheel selection
 
 	bool AssigneFitness(); //Assignes a fitness value to each chromosome in the population
 
-	int ParseGen(const std::string&, int*); //decode/parse each gen in a chromosome
-	int BinToDec(const std::string&); //convert a 4bit bit to decemal
+	int ParseGen(std::string, int*); //decode/parse each gen in a chromosome
+	int BinToDec(std::string); //convert a 4bit bit to decemal
 
 public:
 
