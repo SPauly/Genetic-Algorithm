@@ -50,7 +50,7 @@ class GeneticAlgorithm      //Class to hold the genetic Algorithm
 	std::string getRandomBits(int); //create a random chromosome
 	std::string& Roulette(s_chromo_type*); //choose one chromosome after Roulette wheel selection
 
-	bool AssigneFitness(); //Assignes a fitness value to each chromosome in the population
+	bool AssignFitness(); //Assignes a fitness value to each chromosome in the population
 
 	int ParseGen(std::string, int*); //decode/parse each gen in a chromosome
 	int BinToDec(std::string); //convert a 4bit bit to decemal

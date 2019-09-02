@@ -23,11 +23,12 @@ void GeneticAlgorithm::solve() {
 	__init__pop(); //initialize the population
 
 	generation_count = 0; //set generation counter back to 0;
+	bFoundSolution = false;
 
 	while(!bFoundSolution){ //run through the algorithm untill we found a solution or we hit MAX_ALLOWED_GENERATIONS
 		ftotal_fitness = 0; //set the total fitness of the current generation back to 0
 		
-		if (AssigneFitness() == true) { //have we already found a solution?
+		if (AssignFitness() == true) { //have we already found a solution?
 			PrintChromo(s_solution_ptr);
 			break;
 		}
@@ -160,7 +161,7 @@ std::string& GeneticAlgorithm::Roulette(s_chromo_type* pop_ptr){ // pop_ptr is a
 }
 
 
-bool GeneticAlgorithm::AssigneFitness() {
+bool GeneticAlgorithm::AssignFitness() {
 
 	for (int i = 0; i < POP_SIZE; i++) { //Assigne a fitness to each chromosome and add it to the total fitness
 		int buffer[(int)(CHROMO_LENGTH / GENE_LENGTH)]; //this buffer holds the decoded chromosome
