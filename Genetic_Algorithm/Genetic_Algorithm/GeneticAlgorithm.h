@@ -48,7 +48,7 @@ class GeneticAlgorithm      //Class to hold the genetic Algorithm
 	void Mutate(std::string&); //Mutate our new chromosomes
 
 	std::string getRandomBits(int); //create a random chromosome
-	std::string& Roulette(s_chromo_type*); //choose one chromosome after Roulette wheel selection
+	std::string Roulette(s_chromo_type*); //choose one chromosome after Roulette wheel selection
 
 	bool AssignFitness(); //Assignes a fitness value to each chromosome in the population
 

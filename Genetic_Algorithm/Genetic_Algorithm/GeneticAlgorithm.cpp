@@ -127,7 +127,7 @@ void GeneticAlgorithm::Crossover(std::string& offspring1, std::string& offspring
 }
 
 void GeneticAlgorithm::Mutate(std::string& offspring) {
-	for (int i = 0; i < CHROMO_LENGTH; i++) { //iterate through every bit
+	for (int i = 0; i < offspring.length(); i++) { //iterate through every bit
 		if (RANDOM_NUM < MUTATION_RATE) {  //mutate this gene?
 			if (offspring.at(i) == '1') //swap bites
 				offspring.at(i) = '0';
@@ -148,8 +148,8 @@ std::string GeneticAlgorithm::getRandomBits(int length) {
 	return bits;
 }
 
-std::string& GeneticAlgorithm::Roulette(s_chromo_type* pop_ptr){ // pop_ptr is a pointer to the first element in our population vector
-	int slice = (float)(RANDOM_NUM / ftotal_fitness); //create a random slice within our total fitness
+std::string GeneticAlgorithm::Roulette(s_chromo_type* pop_ptr){ // pop_ptr is a pointer to the first element in our population vector
+	float slice = (float)(RANDOM_NUM * ftotal_fitness); //create a random slice within our total fitness
 
 	float ftns_so_far = .0f; //to messure where our "wheel" is at
 
