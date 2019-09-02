@@ -25,7 +25,7 @@ void GeneticAlgorithm::solve() {
 	generation_count = 0; //set generation counter back to 0;
 	bFoundSolution = false;
 
-	while(!bFoundSolution){ //run through the algorithm untill we found a solution or we hit MAX_ALLOWED_GENERATIONS
+	while(!this->bFoundSolution){ //run through the algorithm untill we found a solution or we hit MAX_ALLOWED_GENERATIONS
 		ftotal_fitness = 0; //set the total fitness of the current generation back to 0
 		
 		if (AssignFitness() == true) { //have we already found a solution?
@@ -45,8 +45,8 @@ void GeneticAlgorithm::solve() {
 			Mutate(offspring1);
 			Mutate(offspring2);
 
-			temp.at(counter++) = s_chromo_type(offspring1, .0f);
-			temp.at(counter++) = s_chromo_type(offspring2, .0f);
+			temp.at(counter++) = s_chromo_type(offspring1, 0.0f);
+			temp.at(counter++) = s_chromo_type(offspring2, 0.0f);
 
 			offspring1.clear();
 			offspring2.clear();
@@ -60,8 +60,10 @@ void GeneticAlgorithm::solve() {
 
 		if (generation_count > MAX_ALLOWED_GENERATIONS) {
 			cout << "No solutions found this run..." << endl;
+			bFoundSolution = true;
 			break;
 		}
+		temp.clear();
 	}
 }
 
@@ -80,7 +82,7 @@ void GeneticAlgorithm::__init__pop() {
 	}
 }
 
-void GeneticAlgorithm::PrintChromo(const s_chromo_type* chromo_ptr) {
+void GeneticAlgorithm::PrintChromo(s_chromo_type* chromo_ptr) {
 	int buffer[ (int)(CHROMO_LENGTH / GENE_LENGTH) ]; //this buffer holds the decoded chromosome
 	int num_elements = ParseGen(chromo_ptr->bits, buffer); //fill the buffer with elements and store it's size in num_elements
 	cout << "\n Gene: ";

@@ -14,7 +14,7 @@ using std::endl;            //for better readability
 #define GENE_LENGTH 4 //The length of each gene 
 #define CHROMO_LENGTH 300 //The length of each chromosome generated
 #define POP_SIZE 300 //Size of the population. 
-#define MAX_ALLOWED_GENERATIONS 1000 //The algorithm will stop after reaching this number
+#define MAX_ALLOWED_GENERATIONS 400 //The algorithm will stop after reaching this number
 
 #define RANDOM_NUM ((float)rand()/(RAND_MAX +1))
 
@@ -29,20 +29,20 @@ class GeneticAlgorithm      //Class to hold the genetic Algorithm
 	bool bFoundSolution = false; //have we found a solution yet
 
 	struct s_chromo_type {   //A struct to hold the actual chromosome
-		std::string bits{ "" }; //Holds the encoded Chromosome
-		float fFitness = .0f; //Holds the fitness of this Chromosome
+		std::string bits; //Holds the encoded Chromosome
+		float fFitness; //Holds the fitness of this Chromosome
 
-		s_chromo_type() : bits{ "" }, fFitness{ .0f }{};
-		s_chromo_type(std::string bts, float ftns) : bits{ bts }, fFitness{ ftns }{};
+		s_chromo_type() : bits( "" ), fFitness( .0f ){};
+		s_chromo_type(std::string bts, float ftns) : bits( bts ), fFitness( ftns ){};
 	};
 
-	std::vector<s_chromo_type> v_population{ (POP_SIZE) }; //this is our population 
+	std::vector<s_chromo_type> v_population{ POP_SIZE }; //this is our population 
 
-	s_chromo_type* s_solution_ptr;
+	s_chromo_type* s_solution_ptr = nullptr;
 
 	void __init__rand(); //initialize rand() with the time
 	void __init__pop(); //initialize a new random population
-	void PrintChromo(const s_chromo_type*); //Print the chromosomes solution and fitness
+	void PrintChromo(s_chromo_type*); //Print the chromosomes solution and fitness
 	void PrintSymbol(int); //function used by PrintChromo to print the operators
 	void Crossover(std::string&, std::string&); //Crossover these two chromosomes (per reference)
 	void Mutate(std::string&); //Mutate our new chromosomes
