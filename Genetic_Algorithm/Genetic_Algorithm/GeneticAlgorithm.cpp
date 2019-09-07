@@ -1,4 +1,4 @@
-#include "GeneticAlgorithm.h"
+﻿#include "GeneticAlgorithm.h"
 
 //ctor
 
@@ -9,6 +9,7 @@ GeneticAlgorithm::GeneticAlgorithm(float& fTrgt): fTarget{fTrgt}{}
 
 GeneticAlgorithm::~GeneticAlgorithm()
 {
+	v_population.clear();
 }
 
 
@@ -26,7 +27,7 @@ void GeneticAlgorithm::solve() {
 	bFoundSolution = false;
 
 	while(!this->bFoundSolution){ //run through the algorithm untill we found a solution or we hit MAX_ALLOWED_GENERATIONS
-		ftotal_fitness = 0; //set the total fitness of the current generation back to 0
+		ftotal_fitness = 0.0f; //set the total fitness of the current generation back to 0
 		
 		if (AssignFitness() == true) { //have we already found a solution?
 			PrintChromo(s_solution_ptr);
@@ -65,6 +66,7 @@ void GeneticAlgorithm::solve() {
 		}
 		temp.clear();
 	}
+	v_population.clear();
 }
 
 
@@ -170,20 +172,20 @@ bool GeneticAlgorithm::AssignFitness() {
 		int num_elements = ParseGen(v_population.at(i).bits, buffer);  //fill the buffer with elements and store it's size in num_elements
 		float fcurrent_score = .0f; // the score of the current chromosome
 
-		for (int i = 0; i < num_elements; i++) { //find out how good the chromosome solution is
+		for (int i = 0; i < num_elements - 1; i += 2) { //find out how good the chromosome solution is And Important: increase by two cause we are skipping the operator
 			switch (buffer[i])
 			{
 			case 10:  // 10 = +
-				fcurrent_score += buffer[++i]; // current score + the next number by increasing i we make sure that we always land on an operator 
+				fcurrent_score += buffer[i + 1]; // current score + the next number by increasing i we make sure that we always land on an operator 
 				break;
 			case 11: // 11 = -
-				fcurrent_score -= buffer[++i];
+				fcurrent_score -= buffer[i + 1];
 				break;
 			case 12: // 12 = *
-				fcurrent_score *= buffer[++i];
+				fcurrent_score *= buffer[i + 1];
 				break;
 			case 13: // 13 = /
-				fcurrent_score /= buffer[++i];
+				fcurrent_score /= buffer[i + 1];
 				break;
 			default:
 				break;
@@ -207,7 +209,7 @@ int GeneticAlgorithm::ParseGen(std::string chromo, int* buffer_ptr) {
 	bool bOperator = true; //determines whether we are searching for an operator
 	int current_gen = 0; //stores the current gen
 
-	for (int i = 0; i < chromo.length(); i += GENE_LENGTH) { //Parse each gene !!!Remember we have to increase by GENE_LENGTH in order to catch all the 4 bit pairs
+	for (int i = 0; i < CHROMO_LENGTH; i += GENE_LENGTH) { //Parse each gene !!!Remember we have to increase by GENE_LENGTH in order to catch all the 4 bit pairs
 		current_gen = BinToDec(chromo.substr(i, GENE_LENGTH));  //decode the current bit. substr(start,end) returns the part of the string from start to end
 
 		if (bOperator) { // Make sure that we follow operator number operator number...
